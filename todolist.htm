@@ -1,0 +1,114 @@
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Document</title>
+        <style>
+            * {
+                margin: 0;
+                padding: 0;
+                box-sizing: border-box;
+                font-family: Arial, sans-serif;
+            }
+            
+            body{
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                min-height: 100vh;
+                background-color: aliceblue;
+
+                section{
+                    display: flex;
+                    justify-content: center;
+                    align-items: center;
+                    flex-direction: column;
+                    gap: 20px;
+                    background-color: white;
+                    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+                    padding: 20px;
+                    border-radius: 10px;
+
+                    input{
+                        padding: 5px;
+                        border-radius: 10px;
+                        outline: none;
+                        border: 1px solid #ccc;
+                    }
+
+                    button {
+                        padding: 8px 12px;
+                        border: none;
+                        border-radius: 8px;
+                        background-color: #007bff;
+                        color: white;
+                        font-size: 16px;
+                        cursor: pointer;
+                    }
+
+                    button:hover {
+                        background-color: #0056b3;
+                    }
+
+                    #todos{
+                        width: 250px;
+                        display: flex;
+                        justify-content: center;
+                        flex-direction: column;
+                        gap: 10px;
+
+                        div{
+                            display: flex;
+                            justify-content: space-between;
+                            align-items: center;
+                            width: 100%;
+                            padding: 10px;
+                            border-radius: 5px;
+                            background-color: rgba(179, 179, 179, 0.914);
+                            color: #fff;
+                        }
+                    }
+                }
+            }
+        </style>
+    </head>
+    <body>
+        <section>
+            <div>
+                <input type="text" />
+                <button onclick="add()">Add</button>
+            </div>
+            <div id="todos"></div>
+        </section>
+        
+
+        <script>
+            const input = document.querySelector('input')
+            const todos = document.querySelector('#todos')
+
+            const arr = []
+
+            function add() {
+                if(input.value != ''){
+                    arr.push(input.value)
+                    printTodos()
+                    input.value = ''
+                }else{
+                    return;
+                }
+            }
+
+            function remove(i) {
+                arr.splice(i, 1)
+                printTodos()
+            }
+
+            function printTodos() {
+                todos.innerHTML = ''
+                for(let i = 0; i < arr.length; i++) {
+                    todos.innerHTML += `<div>${arr[i]} <button onclick="remove(${i})" style="background:red">delete</button></div>`
+                }
+            }
+        </script>
+    </body>
+</html>
