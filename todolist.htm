@@ -70,6 +70,21 @@
                     }
                 }
             }
+            #dlts{
+                width: 100%;
+                display: flex;
+                flex-direction: column;
+                gap: 10px;
+                div{
+                    display: flex;
+                    justify-content: space-between;
+                    align-items: center;
+                    padding: 10px;
+                    border-radius: 5px;
+                    background-color: rgba(179, 179, 179, 0.914);
+                    color: white;
+                }
+            } 
         </style>
     </head>
     <body>
@@ -79,35 +94,59 @@
                 <button onclick="add()">Add</button>
             </div>
             <div id="todos"></div>
+            <button onclick="show()">Show Deleted Todos</button>
+            <div id="dlts"></div>
         </section>
         
 
         <script>
             const input = document.querySelector('input')
             const todos = document.querySelector('#todos')
+            const dlts = document.querySelector('#dlts')
 
             const arr = []
+            const deletedTodos = []
+            let status = false
+
+            function show() {
+                if(!status){
+                    dlts.innerHTML = ''
+                    deletedTodos.forEach((item, i) => {
+                    dlts.innerHTML += `<div>${item}</div>`
+                    })
+                }else{
+                    dlts.innerHTML = ''
+                }
+                status = !status
+            }
 
             function add() {
-                if(input.value != ''){
-                    arr.push(input.value)
-                    printTodos()
-                    input.value = ''
-                }else{
-                    return;
+                if (input.value.trim() != '') {
+                    arr.push(input.value.trim());
+                    printTodos();
+                    input.value = '';
                 }
             }
 
-            function remove(i) {
-                arr.splice(i, 1)
+            function remove(index) {
+                deletedTodos.push(arr[index])
+                arr.splice(index, 1)
                 printTodos()
             }
 
             function printTodos() {
                 todos.innerHTML = ''
-                for(let i = 0; i < arr.length; i++) {
-                    todos.innerHTML += `<div>${arr[i]} <button onclick="remove(${i})" style="background:red">delete</button></div>`
-                }
+                arr.forEach((item, i) => {
+                todos.innerHTML += `
+                    <div>
+                        ${item} 
+                        <button onclick="remove(${i})" style="background:red">Delete</button>
+                    </div>
+                `
+                })
+                // for(let i = 0; i < arr.length; i++) {
+                //     todos.innerHTML += `<div>${arr[i]} <button onclick="remove(${i})" style="background:red">delete</button></div>`
+                // }
             }
         </script>
     </body>
