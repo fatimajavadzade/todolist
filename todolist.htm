@@ -50,7 +50,7 @@
                         background-color: #0056b3;
                     }
 
-                    #todos{
+                    #todos, #deletedSec{
                         width: 250px;
                         display: flex;
                         justify-content: center;
@@ -70,55 +70,31 @@
                     }
                 }
             }
-            #dlts{
-                width: 100%;
-                display: flex;
-                flex-direction: column;
-                gap: 10px;
-                div{
-                    display: flex;
-                    justify-content: space-between;
-                    align-items: center;
-                    padding: 10px;
-                    border-radius: 5px;
-                    background-color: rgba(179, 179, 179, 0.914);
-                    color: white;
-                }
-            } 
+            
         </style>
     </head>
     <body>
         <section>
             <div>
-                <input type="text" />
+                <input id="searchInp" oninput="printTodos()" type="text" placeholder="Search for ...">
+                <input id="input" type="text" placeholder="Add ..." />
                 <button onclick="add()">Add</button>
+                <button onclick="handleDelete()">Show / Hide</button>
             </div>
             <div id="todos"></div>
-            <button onclick="show()">Show Deleted Todos</button>
-            <div id="dlts"></div>
+            <div id="deletedSec"></div>
         </section>
         
 
         <script>
-            const input = document.querySelector('input')
+            const input = document.querySelector('#input')
+            const searchInp = document.querySelector('#searchInp')
             const todos = document.querySelector('#todos')
-            const dlts = document.querySelector('#dlts')
+            const deletedSec = document.querySelector('#deletedSec')
 
             const arr = []
             const deletedTodos = []
-            let status = false
-
-            function show() {
-                if(!status){
-                    dlts.innerHTML = ''
-                    deletedTodos.forEach((item, i) => {
-                    dlts.innerHTML += `<div>${item}</div>`
-                    })
-                }else{
-                    dlts.innerHTML = ''
-                }
-                status = !status
-            }
+            let flag = false
 
             function add() {
                 if (input.value.trim() != '') {
@@ -128,25 +104,30 @@
                 }
             }
 
-            function remove(index) {
-                deletedTodos.push(arr[index])
-                arr.splice(index, 1)
+            function remove(i) {
+                const deletedElem = arr.splice(i, 1) //array qaytarir
+                deletedTodos.push(deletedElem[0]) //array-de 1 element varda onu secir
                 printTodos()
+                printDivs()
             }
-
+            
+            function handleDelete() {
+                deletedSec.style.display = flag ? 'flex' : 'none'
+                flag = !flag
+            }
+            
+            handleDelete()
+            
             function printTodos() {
                 todos.innerHTML = ''
-                arr.forEach((item, i) => {
-                todos.innerHTML += `
-                    <div>
-                        ${item} 
-                        <button onclick="remove(${i})" style="background:red">Delete</button>
-                    </div>
-                `
-                })
-                // for(let i = 0; i < arr.length; i++) {
-                //     todos.innerHTML += `<div>${arr[i]} <button onclick="remove(${i})" style="background:red">delete</button></div>`
-                // }
+                arr
+                .filter(item => item.toLowerCase().includes(searchInp.value.toLowerCase()))
+                .map((item, i) => todos.innerHTML += `<div>${item}<button onclick="remove(${i})" style="background:red">Delete</button></div>`)
+            }
+
+            function printDivs() {
+                deletedSec.innerHTML = ''
+                deletedTodos.map(item => deletedSec.innerHTML += `<div>${item}</div>`)
             }
         </script>
     </body>
